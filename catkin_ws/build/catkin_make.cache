@@ -1,0 +1,2 @@
+bring_up
+-DCATKIN_DEVEL_PREFIX=/home/davidtrejo/Rayo_McQueen/catkin_ws/devel -DCMAKE_INSTALL_PREFIX=/home/davidtrejo/Rayo_McQueen/catkin_ws/install -G Unix Makefiles
