@@ -48,11 +48,11 @@ class Control:
 
         if side:                                                                    # IF ONLY THERE ARE LEFT LINES
             detected_distance, detected_angle = left_line                           # DETECTED MEASURES FOR LEFT LINES
-            goal_distance, goal_angle = [194.36306233438492, 0.6955929768432806]    # GOAL MEASURES FOR LEFT LINES
+            goal_distance, goal_angle = [190.8952592391964, 0.7086262721276703]     # GOAL MEASURES FOR LEFT LINES
 
         else:                                                                       # IF ONLY THERE ARE RIGHT LINES
             detected_distance, detected_angle = right_line                          # DETECTED MEASURES FOR RIGHT LINES
-            goal_distance, goal_angle = [190.46325104859469, 0.7064260556560561]    # GOAL MEASURES FOR RIGHT LINES
+            goal_distance, goal_angle = [194.36306233438492, 0.6955929768432806]    # GOAL MEASURES FOR RIGHT LINES
 
         ed = goal_distance - detected_distance                                      # CALCULATE DISTANCE ERROR
         ea = goal_angle - detected_angle                                            # CALCULATE ANGLE ERROR
@@ -78,8 +78,8 @@ class Control:
         avg_detec_angle = (detec_angle_left + detec_angle_right)/ 2                   # AVG OF DETECTED ANGLE 
 
         # CHECK IN FIRST FRAME
-        goal_dist_left, goal_angle_left = [194.36306233438492, 0.6955929768432806]    # GOAL MEASURES FOR LEFT LINES
-        goal_dist_right, goal_angle_right = [190.46325104859469, 0.7064260556560561]  # GOAL MEASURES FOR RIGHT LINES
+        goal_dist_left, goal_angle_left = [190.8952592391964, 0.7086262721276703]     # GOAL MEASURES FOR LEFT LINES
+        goal_dist_right, goal_angle_right = [194.36306233438492, 0.6955929768432806]  # GOAL MEASURES FOR RIGHT LINES
 
         avg_goal_dist = (goal_dist_left + goal_dist_right)/2.0                        # AVG OF GOAL DISTANCE
         avg_goal_angle = (goal_angle_left + goal_angle_right)/2.0                     # AVG OF GOAL ANGLE

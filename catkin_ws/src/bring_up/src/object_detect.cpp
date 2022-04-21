@@ -188,7 +188,7 @@ void objectDetectCallback(const sensor_msgs::PointCloud2::ConstPtr& msg){
         // FILL POINT CLOUD
 
         if( (isinf(x) or isinf(y) or isinf(z)) != true){
-            if( y > -1.5 ){
+            if( (x > 0.75 or x < -0.75) and  (y > -1.5) ){
                 std::vector<double> point = {x, y, z};
                 point_cloud.push_back(point);
             }

@@ -30,7 +30,7 @@ def main():
     rospy.Subscriber('/enable_PS', Bool, callback_enable_PS)
 
     # PUBLISHERS
-    pub_angle = rospy.Publisher('/goal_steering_angle', Float64, queue_size=10)
+    pub_angle = rospy.Publisher('/steering', Float64, queue_size=10)
     pub_pass_finished = rospy.Publisher('/pass_finished', Bool, queue_size=10)
 
     while not rospy.is_shutdown():
@@ -39,23 +39,23 @@ def main():
 
             steering_angle = -( 0.0174533 * 6 )            # TURN LEFT
             pub_angle.publish(steering_angle)
-            time.sleep(2)
+            time.sleep(4)
 
             steering_angle = ( 0.0174533 * 6 )             # TURN RIGHT
             pub_angle.publish(steering_angle)
-            time.sleep(1)
+            time.sleep(3)
 
             steering_angle = 0.0                           # STAY STRAIGHT
             pub_angle.publish(steering_angle)
-            time.sleep(2)
+            time.sleep(4)
 
             steering_angle = ( 0.0174533 * 12 )            # TURN RIGHT
             pub_angle.publish(steering_angle)
-            time.sleep(2)
+            time.sleep(4)
 
             steering_angle = -( 0.0174533 * 12 )           # TURN LEFT
             pub_angle.publish(steering_angle)
-            time.sleep(1)
+            time.sleep(3)
 
             pass_finished.data = True                      # PASS FINISHED
 

@@ -1,44 +1,51 @@
 #!/usr/bin/env python3
 
-""" ros_car_controller 
-    This node publishes all sensors and subcribe to actuator signals.
-    This node is not for teleoperation, it is just for interfacing ROS and webots.
-"""
+""" bmw_x5_controller """
 
 # LIBRARIES
 import math
 from vehicle import Driver
-from controller import Camera, Lidar, Gyro, GPS
+from controller import Camera, Keyboard, Lidar, Gyro, GPS
 import rospy
 from std_msgs.msg import Float64
 from sensor_msgs.msg import Image, PointCloud2, PointField, NavSatFix, NavSatStatus, Imu
 
 # CONSTANTS
-TIME_STEP = 64
+TIME_STEP = 33
+TRACK_FRONT = 1.7
+WHEEL_BASE = 4.0
 
 # INIT DRIVER
 driver = Driver()
 driver.setCruisingSpeed(0.0)                                  # SPEED CONTROL km/h - INITIAL SPEED
 driver.setSteeringAngle(0.0)                                  # STEERING ANGLE - INITIAL ANGLE
 
-# INIT SENSORS
+# INIT CAMERA
 camera = Camera('camera')                                     # GET CAMERA FROM DEVICES
 camera.enable(TIME_STEP)    
 
-lidar = Lidar('Velodyne HDL-32E')
+# INIT LIDAR
+lidar = Lidar('lidar')
 lidar.enable(TIME_STEP)
 lidar.enablePointCloud()
 
+# INIT GPS
 gps = GPS('gps')
 gps.enable(TIME_STEP)
 
+# INIT GYRO
 gyro = Gyro('gyro')
 gyro.enable(TIME_STEP)
 
-# ACTUATOR CALLBACKS
+# INIT KEYBOARD
+keyboard = Keyboard()
+keyboard.enable(TIME_STEP)
+
+# CRUISE SPEED CALLBACK
 def callback_cruise_speed( msg ):
   driver.setCruisingSpeed(msg.data)
 
+# STEERING ANGLE CALLBACK
 def callback_steering_angle(msg):
   driver.setSteeringAngle(msg.data)
 
@@ -46,10 +53,14 @@ def callback_steering_angle(msg):
 def main():
 
   # INIT ROS
-  print('RUNNING ROS CAR CONTROLLER NODE ...')
-  rospy.init_node('ros_car_controller')
-  rate = rospy.Rate(int(1000.0/TIME_STEP))
+  print('STARTING BMW X5 CONTROLLER NODE ...')
+  rospy.init_node('bmw_x5_controller')
+  rate = rospy.Rate(30)
 
+  print('SIMULATION FOR THE  AUTOMODELCAR LEAGUE OF THE MEXICAN ROBOTICS TOURNAMENT')
+  print('TO MOVE THE VEHICLE, USE THE CORRESPONDING TOPICS')
+  print('CHECK ONLINE DOCUMENTATION AT https://github.com/mnegretev/TMR-2022-AutoModelCar')
+  
   # IMAGE MESSAGE
   msg_image = Image()
   msg_image.height = camera.getHeight()
@@ -78,8 +89,6 @@ def main():
   msg_gps = NavSatFix()
   msg_gps.header.stamp = rospy.Time.now()
   msg_gps.header.frame_id = 'gps_link'
-  # msg_gps.position_covariance = NavSatFix.COVARIANCE_TYPE_KNOWN
-  # msg_gps.status.service = NavSatStatus.SERVICE_GPS
   
 
   # GYRO MESSAGE
@@ -91,28 +100,30 @@ def main():
   # PUBLISHERS
   pub_camera_data  = rospy.Publisher('/camera/rgb/raw', Image, queue_size=10)
   pub_point_cloud  = rospy.Publisher('/point_cloud'   , PointCloud2, queue_size=10)
-  pub_nav_gps   = rospy.Publisher('/gps', NavSatFix, queue_size=10)
+  pub_nav_gps      = rospy.Publisher('/gps', NavSatFix, queue_size=10)
   pub_imu_gyro     = rospy.Publisher('/gyro', Imu, queue_size=10)
 
   # SUBSCRIBERS
-  rospy.Subscriber('/goal_cruise_speed'  , Float64, callback_cruise_speed  )
-  rospy.Subscriber('/goal_steering_angle', Float64, callback_steering_angle)
+  rospy.Subscriber('/speed'  , Float64, callback_cruise_speed  )
+  rospy.Subscriber('/steering', Float64, callback_steering_angle)
 
   # MAIN LOOP
   while driver.step() != -1 and not rospy.is_shutdown():
-    msg_image.data = camera.getImage()                                       # GET IMAGE DATA FROM CAMERA
-    msg_point_cloud.data = lidar.getPointCloud(data_type='buffer')           # GET POINT CLOUD FROM LIDAR
-    msg_gyro.angular_velocity.x = gyro.getValues()[0]                        # GET X COMPONENT FROM GYRO
-    msg_gyro.angular_velocity.y = gyro.getValues()[1]                        # GET Y COMPONENT FROM GYRO
-    msg_gyro.angular_velocity.z = gyro.getValues()[2]                        # GET Z COMPONENT FROM GYRO
-    msg_gps.latitude = gps.getValues()[0]                                    # GET X COMPONENT FROM GPS  
-    msg_gps.longitude = gps.getValues()[1]                                   # GET Y COMPONENT FROM GPS  
-    msg_gps.altitude = gps.getValues()[2]                                    # GET Z COMPONENT FROM GPS 
+    msg_image.data = camera.getImage()                                     # GET IMAGE DATA FROM CAMERA
+    msg_point_cloud.data = lidar.getPointCloud(data_type='buffer')         # GET POINT CLOUD FROM LIDAR
+    msg_point_cloud.header.stamp = rospy.Time.now()                        # REFRESH STAMP FOR POINT CLOUD
+    msg_gyro.angular_velocity.x = gyro.getValues()[0]                      # GET X COMPONENT FROM GYRO
+    msg_gyro.angular_velocity.y = gyro.getValues()[1]                      # GET Y COMPONENT FROM GYRO
+    msg_gyro.angular_velocity.z = gyro.getValues()[2]                      # GET Z COMPONENT FROM GYRO
+    msg_gps.latitude = gps.getValues()[0]                                  # GET X COMPONENT FROM GPS  
+    msg_gps.longitude = gps.getValues()[1]                                 # GET Y COMPONENT FROM GPS  
+    msg_gps.altitude = gps.getValues()[2]                                  # GET Z COMPONENT FROM GPS 
     
-    pub_camera_data.publish(msg_image)                                       # PUBLISHING IMAGE MESSAGE
-    pub_point_cloud.publish(msg_point_cloud)                                 # PUBLISHING POINTCLOUD2 MESSAGE
-    pub_imu_gyro.publish(msg_gyro)                                           # PUBLISHING IMU MESSAGE
-    pub_nav_gps.publish(msg_gps)                                             # PUBLISHING NAVSATFIX MESSAGE
+    
+    pub_camera_data.publish(msg_image)                                     # PUBLISHING IMAGE MESSAGE
+    pub_point_cloud.publish(msg_point_cloud)                               # PUBLISHING POINTCLOUD2 MESSAGE
+    pub_imu_gyro.publish(msg_gyro)                                         # PUBLISHING IMU MESSAGE
+    pub_nav_gps.publish(msg_gps)                                           # PUBLISHING NAVSATFIX MESSAGE
     
     rate.sleep()
     pass

@@ -106,35 +106,9 @@ DEF GROUND Solid {
   boundingObject USE GROUND_PLANE
   locked TRUE
 }
-CitroenCZeroSimple {
-  translation 50.93 0.4 -45.94
-  color 0.12549 0.290196 0.529412
-  name "vehicle(6)"
-}
-LincolnMKZSimple {
-  translation 16 0.4 -72.61
-  rotation 0 1 0 -1.5707953071795862
-  color 0.333333 0.341176 0.32549
-  name "vehicle(7)"
-}
-ToyotaPriusSimple {
-  translation 17.1038 0.4 -39.9661
-  rotation 0 1 0 -2.6179953071795863
-  name "vehicle(5)"
-}
 HighwayPole {
   translation -41.75 0 -27.02
   rotation 0 1 0 1.5708
-}
-DEF OBS-5 TeslaModel3Simple {
-  translation 19.43 0.4 5.15589e-05
-  rotation 0 1 0 3.14159
-  name "vehicle(4)"
-}
-DEF OBS-4 RangeRoverSportSVRSimple {
-  translation -20.5549 0.4 47.1554
-  rotation 0 1 0 0.785398
-  name "vehicle(3)"
 }
 StraightRoadSegment {
   translation -35 0.02 -40
@@ -403,8 +377,21 @@ CurvedRoadSegment {
   curvatureRadius 30.5
 }
 BmwX5 {
-  translation -36.9632 0.0282515 -32.6809
-  rotation -0.9785174180294364 0.2061634999938847 0.0005233385869732009 0.005188375975700859
+  hidden position_0_0 2.9776532823634e-10
+  hidden position2_0_0 -1.0086657108921099e-05
+  hidden position_0_1 -2.977653037333709e-10
+  hidden position2_0_1 -1.0086657095665741e-05
+  hidden position_0_2 -0.00021662620658076834
+  hidden position_0_3 -0.0002166262067030906
+  hidden position_0_9 3.297024799052041e-07
+  hidden rotation_1 2.9520714830358523e-05 -0.9999999995642638 -1.4888266405329643e-10 1.0086666346066227e-05
+  hidden rotation_2 2.9520712439907333e-05 0.9999999995642638 1.488826518018119e-10 1.0086666346066227e-05
+  hidden rotation_3 0 -1 0 0.0002166262058661945
+  hidden rotation_4 0 1 0 0.0002166262058661945
+  hidden translation_26 6.536365343423611e-07 -1.2641109181643628e-07 -1.1262079180340834e-07
+  hidden rotation_26 0 -0.6652060421485013 0.7466598432279096 3.2917740992269735e-07
+  translation -36.96319968769329 0.31355356249087096 -32.68060803080911
+  rotation -0.9755364507076452 0.21983712407970332 0.000521744281496656 0.004865666088557547
   controller "bmw_x5_controller"
   sensorsSlotTop [
     Lidar {
@@ -467,22 +454,4 @@ BmwX5 {
       height 150
     }
   ]
-}
-DEF OBS-1 CitroenCZeroSimple {
-  translation -36.89 0.4 3.18
-  name "vehicle(1)"
-}
-DEF OBS-2 LincolnMKZSimple {
-  translation 9.3403 0.4 75.57
-  rotation 0 1 0 1.5708
-  name "vehicle(2)"
-}
-DEF OBS-3 MercedesBenzSprinterSimple {
-  translation 10.31 0.4 10.6
-  rotation 0 1 0 -1.5707953071795862
-}
-Robot {
-  name "supervisor"
-  controller "supervisor_static_obstacles"
-  supervisor TRUE
 }
