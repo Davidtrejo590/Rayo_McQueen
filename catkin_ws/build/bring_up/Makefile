@@ -303,6 +303,21 @@ std_msgs_generate_messages_cpp/fast:
 .PHONY : std_msgs_generate_messages_cpp/fast
 
 # Convenience name for target.
+bring_up/CMakeFiles/object_detect.dir/rule:
+	cd /home/davidtrejo/Rayo_McQueen/catkin_ws/build && $(MAKE) -f CMakeFiles/Makefile2 bring_up/CMakeFiles/object_detect.dir/rule
+.PHONY : bring_up/CMakeFiles/object_detect.dir/rule
+
+# Convenience name for target.
+object_detect: bring_up/CMakeFiles/object_detect.dir/rule
+
+.PHONY : object_detect
+
+# fast build rule for target.
+object_detect/fast:
+	cd /home/davidtrejo/Rayo_McQueen/catkin_ws/build && $(MAKE) -f bring_up/CMakeFiles/object_detect.dir/build.make bring_up/CMakeFiles/object_detect.dir/build
+.PHONY : object_detect/fast
+
+# Convenience name for target.
 bring_up/CMakeFiles/rosgraph_msgs_generate_messages_nodejs.dir/rule:
 	cd /home/davidtrejo/Rayo_McQueen/catkin_ws/build && $(MAKE) -f CMakeFiles/Makefile2 bring_up/CMakeFiles/rosgraph_msgs_generate_messages_nodejs.dir/rule
 .PHONY : bring_up/CMakeFiles/rosgraph_msgs_generate_messages_nodejs.dir/rule
@@ -392,6 +407,33 @@ std_msgs_generate_messages_py/fast:
 	cd /home/davidtrejo/Rayo_McQueen/catkin_ws/build && $(MAKE) -f bring_up/CMakeFiles/std_msgs_generate_messages_py.dir/build.make bring_up/CMakeFiles/std_msgs_generate_messages_py.dir/build
 .PHONY : std_msgs_generate_messages_py/fast
 
+src/object_detect.o: src/object_detect.cpp.o
+
+.PHONY : src/object_detect.o
+
+# target to build an object file
+src/object_detect.cpp.o:
+	cd /home/davidtrejo/Rayo_McQueen/catkin_ws/build && $(MAKE) -f bring_up/CMakeFiles/object_detect.dir/build.make bring_up/CMakeFiles/object_detect.dir/src/object_detect.cpp.o
+.PHONY : src/object_detect.cpp.o
+
+src/object_detect.i: src/object_detect.cpp.i
+
+.PHONY : src/object_detect.i
+
+# target to preprocess a source file
+src/object_detect.cpp.i:
+	cd /home/davidtrejo/Rayo_McQueen/catkin_ws/build && $(MAKE) -f bring_up/CMakeFiles/object_detect.dir/build.make bring_up/CMakeFiles/object_detect.dir/src/object_detect.cpp.i
+.PHONY : src/object_detect.cpp.i
+
+src/object_detect.s: src/object_detect.cpp.s
+
+.PHONY : src/object_detect.s
+
+# target to generate assembly for a file
+src/object_detect.cpp.s:
+	cd /home/davidtrejo/Rayo_McQueen/catkin_ws/build && $(MAKE) -f bring_up/CMakeFiles/object_detect.dir/build.make bring_up/CMakeFiles/object_detect.dir/src/object_detect.cpp.s
+.PHONY : src/object_detect.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -413,13 +455,17 @@ help:
 	@echo "... rosgraph_msgs_generate_messages_eus"
 	@echo "... rosgraph_msgs_generate_messages_lisp"
 	@echo "... std_msgs_generate_messages_cpp"
+	@echo "... test"
+	@echo "... object_detect"
 	@echo "... rosgraph_msgs_generate_messages_nodejs"
 	@echo "... rosgraph_msgs_generate_messages_py"
 	@echo "... std_msgs_generate_messages_eus"
 	@echo "... std_msgs_generate_messages_nodejs"
 	@echo "... roscpp_generate_messages_nodejs"
 	@echo "... std_msgs_generate_messages_py"
-	@echo "... test"
+	@echo "... src/object_detect.o"
+	@echo "... src/object_detect.i"
+	@echo "... src/object_detect.s"
 .PHONY : help
 
 

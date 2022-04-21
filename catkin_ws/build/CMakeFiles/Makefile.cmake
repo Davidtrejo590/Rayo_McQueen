@@ -197,6 +197,7 @@ set(CMAKE_DEPEND_INFO_FILES
   "bring_up/CMakeFiles/rosgraph_msgs_generate_messages_eus.dir/DependInfo.cmake"
   "bring_up/CMakeFiles/rosgraph_msgs_generate_messages_lisp.dir/DependInfo.cmake"
   "bring_up/CMakeFiles/std_msgs_generate_messages_cpp.dir/DependInfo.cmake"
+  "bring_up/CMakeFiles/object_detect.dir/DependInfo.cmake"
   "bring_up/CMakeFiles/rosgraph_msgs_generate_messages_nodejs.dir/DependInfo.cmake"
   "bring_up/CMakeFiles/rosgraph_msgs_generate_messages_py.dir/DependInfo.cmake"
   "bring_up/CMakeFiles/std_msgs_generate_messages_eus.dir/DependInfo.cmake"

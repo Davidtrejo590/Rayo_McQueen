@@ -402,6 +402,19 @@ std_msgs_generate_messages_cpp/fast:
 .PHONY : std_msgs_generate_messages_cpp/fast
 
 #=============================================================================
+# Target rules for targets named object_detect
+
+# Build rule for target.
+object_detect: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 object_detect
+.PHONY : object_detect
+
+# fast build rule for target.
+object_detect/fast:
+	$(MAKE) -f bring_up/CMakeFiles/object_detect.dir/build.make bring_up/CMakeFiles/object_detect.dir/build
+.PHONY : object_detect/fast
+
+#=============================================================================
 # Target rules for targets named rosgraph_msgs_generate_messages_nodejs
 
 # Build rule for target.
@@ -510,6 +523,7 @@ help:
 	@echo "... rosgraph_msgs_generate_messages_eus"
 	@echo "... rosgraph_msgs_generate_messages_lisp"
 	@echo "... std_msgs_generate_messages_cpp"
+	@echo "... object_detect"
 	@echo "... rosgraph_msgs_generate_messages_nodejs"
 	@echo "... rosgraph_msgs_generate_messages_py"
 	@echo "... std_msgs_generate_messages_eus"
