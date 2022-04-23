@@ -5,8 +5,9 @@ WorldInfo {
   ]
   title "TMR-2022-AutoModelCar"
   ERP 0.6
-  basicTimeStep 50
+  basicTimeStep 33
   coordinateSystem "NUE"
+  gpsCoordinateSystem "WGS84"
   lineScale 1
   contactProperties [
     ContactProperties {
@@ -71,8 +72,8 @@ WorldInfo {
   ]
 }
 Viewpoint {
-  orientation 0.5978011195884526 -0.5329614385771488 -0.59882044588388 4.119514547902926
-  position -26.089985598505216 266.03315855457305 7.622734262728423
+  orientation 0.5312200406266017 -0.6634169108539758 -0.5269566119042817 4.310240010432988
+  position -6.822880439119256 73.21605332736422 -21.378402748255443
   near 1
   follow "vehicle"
   followSmoothness 0
@@ -105,45 +106,9 @@ DEF GROUND Solid {
   boundingObject USE GROUND_PLANE
   locked TRUE
 }
-Robot {
-  controller "supervisor_controller"
-  supervisor TRUE
-}
-CitroenCZeroSimple {
-  translation 50.93 0.4 -45.94
-  color 0.12549 0.290196 0.529412
-  name "vehicle(6)"
-}
-CitroenCZeroSimple {
-  translation 6.92 0.4 10.1
-  rotation 0 1 0 -1.5707953071795862
-  color 0.12549 0.290196 0.529412
-  name "vehicle(8)"
-}
-LincolnMKZSimple {
-  translation 16 0.4 -72.61
-  rotation 0 1 0 -1.5707953071795862
-  color 0.333333 0.341176 0.32549
-  name "vehicle(7)"
-}
-ToyotaPriusSimple {
-  translation 17.1038 0.4 -39.9661
-  rotation 0 1 0 -2.6179953071795863
-  name "vehicle(5)"
-}
 HighwayPole {
   translation -41.75 0 -27.02
   rotation 0 1 0 1.5708
-}
-TeslaModel3Simple {
-  translation 19.43 0.4 5.15589e-05
-  rotation 0 1 0 3.14159
-  name "vehicle(4)"
-}
-RangeRoverSportSVRSimple {
-  translation -20.5549 0.4 47.1554
-  rotation 0 1 0 0.785398
-  name "vehicle(3)"
 }
 StraightRoadSegment {
   translation -35 0.02 -40
@@ -412,22 +377,29 @@ CurvedRoadSegment {
   curvatureRadius 30.5
 }
 BmwX5 {
-  translation -36.863 0.186033 -32.5203
-  rotation -0.9774185753737384 0.21131175178731865 0.0005216042045738904 0.005050866818787648
-  controller "ros_car_controller"
-  sensorsSlotFront [
-    SickLms291 {
-    }
-  ]
+  translation -36.9632 0.0282515 -32.6809
+  rotation -0.9785174180294364 0.2061634999938847 0.0005233385869732009 0.005188375975700859
+  controller "bmw_x5_controller"
   sensorsSlotTop [
     Lidar {
-      translation 0 0.21 0
-      horizontalResolution 1024
+      translation 0 0.32 0
+      rotation 0 -1 0 5.92017e-06
+      horizontalResolution 3600
       fieldOfView 6.28
-      verticalFieldOfView 0.3
-      numberOfLayers 16
-      maxRange 30
-      noise 0.1
+      verticalFieldOfView 0.5
+      numberOfLayers 32
+      maxRange 75
+      noise 0.01
+    }
+    SolidPipe {
+      name "lidar_pipe"
+      height 0.4
+      radius 0.15
+      thickness 0.14
+      appearance PBRAppearance {
+        roughness 0.5
+        metalness 0
+      }
     }
     Camera {
       translation 0 -0.05 -0.72
@@ -453,11 +425,14 @@ BmwX5 {
       fieldOfView 1
       width 640
       height 480
-      noise 0.05
+      noise 0.03
     }
   ]
   sensorsSlotCenter [
     GPS {
+      translationStep 2
+      accuracy 0.1
+      resolution 2
     }
     Gyro {
     }
@@ -467,12 +442,31 @@ BmwX5 {
     }
   ]
 }
-DEF CAR-1 CitroenCZeroSimple {
-  translation -36.89 0.4 -21.59
+DEF OBS-5 TeslaModel3Simple {
+  translation 19.43 0.4 5.15589e-05
+  rotation 0 1 0 3.14159
+  name "vehicle(4)"
+}
+DEF OBS-4 RangeRoverSportSVRSimple {
+  translation -20.5549 0.4 47.1554
+  rotation 0 1 0 0.785398
+  name "vehicle(3)"
+}
+DEF OBS-1 CitroenCZeroSimple {
+  translation -36.89 0.4 -10.45
   name "vehicle(1)"
 }
-DEF CAR-2 LincolnMKZSimple {
-  translation -8.6497 0.4 71.28
+DEF OBS-2 LincolnMKZSimple {
+  translation 9.3403 0.4 75.57
   rotation 0 1 0 1.5708
   name "vehicle(2)"
+}
+DEF OBS-3 MercedesBenzSprinterSimple {
+  translation 10.31 0.4 10.6
+  rotation 0 1 0 -1.5707953071795862
+}
+Robot {
+  name "supervisor"
+  controller "supervisor_controller"
+  supervisor TRUE
 }

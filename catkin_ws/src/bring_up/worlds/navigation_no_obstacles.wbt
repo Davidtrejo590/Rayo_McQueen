@@ -7,7 +7,7 @@ WorldInfo {
   ERP 0.6
   basicTimeStep 33
   coordinateSystem "NUE"
-  gpsCoordinateSystem "WGS84"
+  gpsCoordinateSystem "WGS84" 
   lineScale 1
   contactProperties [
     ContactProperties {
@@ -72,8 +72,8 @@ WorldInfo {
   ]
 }
 Viewpoint {
-  orientation 0.5978011195884526 -0.5329614385771488 -0.59882044588388 4.119514547902926
-  position -26.089985598505216 266.03315855457305 7.622734262728423
+  orientation 0.5312200406266017 -0.6634169108539758 -0.5269566119042817 4.310240010432988
+  position -6.822880439119256 73.21605332736422 -21.378402748255443
   near 1
   follow "vehicle"
   followSmoothness 0
@@ -377,32 +377,19 @@ CurvedRoadSegment {
   curvatureRadius 30.5
 }
 BmwX5 {
-  hidden position_0_0 2.9776532823634e-10
-  hidden position2_0_0 -1.0086657108921099e-05
-  hidden position_0_1 -2.977653037333709e-10
-  hidden position2_0_1 -1.0086657095665741e-05
-  hidden position_0_2 -0.00021662620658076834
-  hidden position_0_3 -0.0002166262067030906
-  hidden position_0_9 3.297024799052041e-07
-  hidden rotation_1 2.9520714830358523e-05 -0.9999999995642638 -1.4888266405329643e-10 1.0086666346066227e-05
-  hidden rotation_2 2.9520712439907333e-05 0.9999999995642638 1.488826518018119e-10 1.0086666346066227e-05
-  hidden rotation_3 0 -1 0 0.0002166262058661945
-  hidden rotation_4 0 1 0 0.0002166262058661945
-  hidden translation_26 6.536365343423611e-07 -1.2641109181643628e-07 -1.1262079180340834e-07
-  hidden rotation_26 0 -0.6652060421485013 0.7466598432279096 3.2917740992269735e-07
-  translation -36.96319968769329 0.31355356249087096 -32.68060803080911
-  rotation -0.9755364507076452 0.21983712407970332 0.000521744281496656 0.004865666088557547
+  translation -36.9632 0.0282515 -32.6809
+  rotation -0.9785174180294364 0.2061634999938847 0.0005233385869732009 0.005188375975700859
   controller "bmw_x5_controller"
   sensorsSlotTop [
     Lidar {
-      translation 0 0.22 0
+      translation 0 0.32 0
       rotation 0 -1 0 5.92017e-06
       horizontalResolution 3600
       fieldOfView 6.28
-      verticalFieldOfView 0.3
+      verticalFieldOfView 0.5
       numberOfLayers 32
       maxRange 75
-      noise 0.1
+      noise 0.01
     }
     SolidPipe {
       name "lidar_pipe"
