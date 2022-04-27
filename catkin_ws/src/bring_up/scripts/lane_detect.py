@@ -18,8 +18,8 @@ import math
 
 
 # GLOBAL VARIABLES
-polar_left_line = []
-polar_right_line = []
+polar_left_border = []
+polar_right_border = []
 
 
 # GET EDGES OF AN IMAGE
@@ -124,8 +124,7 @@ def calculate_distance_angle(line, width, height, side):
 # CALLBACK LANE DETECT
 def callback_lane_detect(msg):
 
-    global polar_left_line
-    global polar_right_line
+    global polar_left_border, polar_right_border
 
     bridge = CvBridge()
     cv2_img = bridge.imgmsg_to_cv2(msg, 'bgr8')                                 # ROS IMAGE TO CV2 IMAGE ( RGB )
@@ -134,7 +133,7 @@ def callback_lane_detect(msg):
     width = lane_img.shape[1]                                                   # Y AXIS
     canny_img = canny(lane_img)                                                 # CANNY IMAGE ( EDGES )
     cropped_img = region_of_interest(canny_img)                                 # COPPRED IMAGE ( ONLY INTEREST REGION ) 
-    lines = cv2.HoughLinesP(                                                    # HOUGHP ( LANE LINES )
+    hough_lines = cv2.HoughLinesP(                                                    # HOUGHP ( LANE LINES )
             cropped_img,
             2,
             np.pi/180,
@@ -142,26 +141,25 @@ def callback_lane_detect(msg):
             minLineLength=40,
             maxLineGap=50
         )
-    if lines is not None:                                                                   # IF THERE ARE LINES
-        avg_lines = avg_slope_intercept(lane_img, lines)                                    # LEFT AND RIGHT LINES AS COORDINATES
-        left_line, right_line = avg_lines.reshape(2,4)
-        polar_left_line = calculate_distance_angle(left_line, width, height, True)          # GET DISTANCE AND ANGLE FOR LEFT LINE
-        polar_right_line = calculate_distance_angle(right_line, width, height, False)       # GET DISTANCE AND ANGLE FOR RIGHT LINE
-        # line_img = display_lines(lane_img, avg_lines)                                       # DISPLAY LINES IN A IMAGE
-        # combo_img = cv2.addWeighted(lane_img, 0.8, line_img, 1, 1)                          # LANE_IMG + LINES
+    if hough_lines is not None:                                                                   # IF THERE ARE LINES
+        avg_borders = avg_slope_intercept(lane_img, hough_lines)                                    # LEFT AND RIGHT LINES AS COORDINATES
+        left_border, right_border = avg_borders.reshape(2,4)
+        polar_left_border = calculate_distance_angle(left_border, width, height, True)          # GET DISTANCE AND ANGLE FOR LEFT LINE
+        polar_right_border = calculate_distance_angle(right_border, width, height, False)       # GET DISTANCE AND ANGLE FOR RIGHT LINE
+        # border_img = display_lines(lane_img, avg_borders)                                       # DISPLAY LINES IN A IMAGE
+        # combo_img = cv2.addWeighted(lane_img, 0.8, border_img, 1, 1)                          # LANE_IMG + LINES
         # cv2.imshow('Result', combo_img)                                                     # DISPLAY IMAGE 
         # cv2.waitKey(33)
     else:                                                                                   # IF THERE AREN'T LINES
-        polar_left_line = [0.0,0.0]                                                         # DISTANCE AND ANGLE NOT CALCULATED FOR LEFT LINE
-        polar_right_line = [0.0,0.0]                                                        # DISTANCE AND ANGLE NOT CALCULATED FOR RIGHT LINE
+        polar_left_border = [0.0,0.0]                                                         # DISTANCE AND ANGLE NOT CALCULATED FOR LEFT LINE
+        polar_right_border = [0.0,0.0]                                                        # DISTANCE AND ANGLE NOT CALCULATED FOR RIGHT LINE
         # cv2.imshow('Result', lane_img)                                                      # DISPLAY ORIGINAL IMAGE 
         # cv2.waitKey(33)
 
 # MAIN FUNCTION
 def main():
 
-    global polar_left_line
-    global polar_right_line
+    global polar_left_border, polar_right_border
 
     print('Lane Detect Node...')
     rospy.init_node('lane_detect')
@@ -171,22 +169,22 @@ def main():
     rospy.Subscriber('/camera/rgb/raw', Image, callback_lane_detect)
 
      # MESSAGES
-    msg_left_line = Float64MultiArray()
-    msg_right_line = Float64MultiArray()
+    msg_left_border = Float64MultiArray()
+    msg_right_border = Float64MultiArray()
 
     # PUBLISHERS
-    pub_left_lane = rospy.Publisher('/left_lane', Float64MultiArray, queue_size=10)
-    pub_right_lane = rospy.Publisher('/right_lane', Float64MultiArray, queue_size=10)
+    pub_left_border = rospy.Publisher('/left_border', Float64MultiArray, queue_size=10)
+    pub_right_border = rospy.Publisher('/right_border', Float64MultiArray, queue_size=10)
 
 
     while not rospy.is_shutdown():
         # LEFT AND RIGHT LINES
-        msg_left_line.data = polar_left_line
-        msg_right_line.data = polar_right_line
+        msg_left_border.data = polar_left_border
+        msg_right_border.data = polar_right_border
 
         # PUBLISH LEFT AND RIGHT LINES
-        pub_left_lane.publish(msg_left_line)
-        pub_right_lane.publish(msg_right_line)
+        pub_left_border.publish(msg_left_border)
+        pub_right_border.publish(msg_right_border)
         
         rate.sleep()
 

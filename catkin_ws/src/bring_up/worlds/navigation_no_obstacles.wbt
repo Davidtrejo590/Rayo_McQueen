@@ -7,7 +7,7 @@ WorldInfo {
   ERP 0.6
   basicTimeStep 33
   coordinateSystem "NUE"
-  gpsCoordinateSystem "WGS84" 
+  gpsCoordinateSystem "WGS84"
   lineScale 1
   contactProperties [
     ContactProperties {
@@ -72,8 +72,8 @@ WorldInfo {
   ]
 }
 Viewpoint {
-  orientation 0.5312200406266017 -0.6634169108539758 -0.5269566119042817 4.310240010432988
-  position -6.822880439119256 73.21605332736422 -21.378402748255443
+  orientation 0.9951226928890078 -0.017023524454320958 0.09716494075788047 6.227445383345344
+  position -37.301007209086656 2.0462734550836292 -2.945887111955919
   near 1
   follow "vehicle"
   followSmoothness 0

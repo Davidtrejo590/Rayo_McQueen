@@ -18,28 +18,31 @@ class Control:
         self.steering_angle = 0.0
 
     # CONTROL LAW FOR LANE TRACKING & KEEP DISTANCE
-    def control_law(self, left_line, right_line, distance = 0):
+    def control_law(self, left_border, right_border, goal_speed):
 
         # NO LINES DETECTED
-        if (left_line[0] == 0.0 and left_line[1] == 0.0) and (right_line[0] == 0.0 and right_line[1] == 0.0):
+        if (left_border[0] == 0.0 and left_border[1] == 0.0) and (right_border[0] == 0.0 and right_border[1] == 0.0):
             self.cruise_speed = 0.0
             self.steering_angle = 0.0
         # BOTH LINES DETECTED
-        elif (left_line[0] != 0.0 and left_line[1] != 0.0) and (right_line[0] != 0.0 and right_line[1] != 0.0):
-            self.cruise_speed = 30.0 if distance == 0.0 else abs(distance/0.5)
-            self.steering_angle = self.compute_steering_angle_avg(left_line, right_line)
+        elif (left_border[0] != 0.0 and left_border[1] != 0.0) and (right_border[0] != 0.0 and right_border[1] != 0.0):
+            self.cruise_speed = goal_speed
+            self.steering_angle = self.compute_steering_angle_avg(left_border, right_border)
+            # print('AVG BORDER: ', self.steering_angle)
         # LEFT LINES DETECTED
-        elif (left_line[0] != 0.0 and left_line[1] != 0.0) and (right_line[0] == 0 or right_line[1] == 0.0):
-            self.cruise_speed = 20.0 if distance == 0.0 else abs(distance/0.5)
-            self.steering_angle = self.compute_steering_angle(left_line, right_line, True)
+        elif (left_border[0] != 0.0 and left_border[1] != 0.0) and (right_border[0] == 0 or right_border[1] == 0.0):
+            self.cruise_speed = goal_speed / 2.0
+            self.steering_angle = self.compute_steering_angle(left_border, right_border, True)
+            # print('ONLY LEFT BORDER: ', self.steering_angle)
         # RIGHT LINES DETECTED
-        elif (left_line[0] == 0.0 or left_line[1] == 0.0) and (right_line[0] != 0 and right_line[1] != 0.0):
-            self.cruise_speed = 20.0 if distance == 0.0 else abs(distance/0.5)
-            self.steering_angle = self.compute_steering_angle(left_line, right_line, False)
+        elif (left_border[0] == 0.0 or left_border[1] == 0.0) and (right_border[0] != 0 and right_border[1] != 0.0):
+            self.cruise_speed = goal_speed / 2.0
+            self.steering_angle = self.compute_steering_angle(left_border, right_border, False)
+            # print('ONLY RIGHT BORDER: ', self.steering_angle)
 
     # CONPUTE STEERING ANGLE BY SIDE
-    def compute_steering_angle(self, left_line, right_line, side):
-        kd = 0.003                                                                  # CONSTANT FOR DISTANCE ERROR
+    def compute_steering_angle(self, left_border, right_border, side):
+        kd = 0.0041                                                                  # CONSTANT FOR DISTANCE ERROR
         ka = 0.01                                                                   # CONSTANT FOR ANGLE ERROR
     
         detected_distance, detected_angle = [0.0, 0.0]                              # INITIAL STATE FOR DETECTED MEASURES
@@ -47,11 +50,11 @@ class Control:
         steering = 0.0                                                              # INITIAL STATE FOR STEERING
 
         if side:                                                                    # IF ONLY THERE ARE LEFT LINES
-            detected_distance, detected_angle = left_line                           # DETECTED MEASURES FOR LEFT LINES
+            detected_distance, detected_angle = left_border                           # DETECTED MEASURES FOR LEFT LINES
             goal_distance, goal_angle = [190.8952592391964, 0.7086262721276703]     # GOAL MEASURES FOR LEFT LINES
 
         else:                                                                       # IF ONLY THERE ARE RIGHT LINES
-            detected_distance, detected_angle = right_line                          # DETECTED MEASURES FOR RIGHT LINES
+            detected_distance, detected_angle = right_border                          # DETECTED MEASURES FOR RIGHT LINES
             goal_distance, goal_angle = [194.36306233438492, 0.6955929768432806]    # GOAL MEASURES FOR RIGHT LINES
 
         ed = goal_distance - detected_distance                                      # CALCULATE DISTANCE ERROR
@@ -67,12 +70,12 @@ class Control:
         return steering                                                             # RETURN THE CORRESPOND STEERING
 
     # COMPUTE AVG STEERING ANGLE (BOTH LINES)
-    def compute_steering_angle_avg(self, left_line, right_line):
+    def compute_steering_angle_avg(self, left_border, right_border):
         kd = 0.00005
         ka = 0.01
 
-        detec_dist_left, detec_angle_left = left_line                                 # DETECTED MEASURES FOR LEFT LINES
-        detec_dist_right, detec_angle_right = right_line                              # DETECTED MEASURES FOR RIGHT LINES
+        detec_dist_left, detec_angle_left = left_border                                 # DETECTED MEASURES FOR LEFT LINES
+        detec_dist_right, detec_angle_right = right_border                              # DETECTED MEASURES FOR RIGHT LINES
 
         avg_detec_dist = (detec_dist_left + detec_dist_right)/2                       # AVG OF DETECTED DISTANCE 
         avg_detec_angle = (detec_angle_left + detec_angle_right)/ 2                   # AVG OF DETECTED ANGLE 
@@ -91,7 +94,6 @@ class Control:
             steering = 0.0                                                                  
         else:
             steering = (kd * ed) + (ka * ea)                                          # CALCULATE STEERING ACCORDING THE AVGS
-
 
         return steering                                                               # RETURN THE CORRESPOND ANGLE
         
