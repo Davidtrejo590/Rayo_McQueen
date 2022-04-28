@@ -17,7 +17,6 @@ SM_PASS     = 'PASS'
 # ENABLES
 enable_LT = Bool()              # ENABLE LANE TRACKING
 enable_PS = Bool()              # ENABLE PASSING
-enable_cl = Bool()
 
 # GLOBAL VARIABLES
 pass_finished = False
@@ -35,15 +34,15 @@ def callback_car_pose(msg):
                 # print('CAR DETECTED', [car.position.x, car.position.z])
                 car_detected = True
 
-
 # PASS FINISHED CALLBACK
 def callback_pass_finished(msg):
     global pass_finished
     pass_finished = msg.data
+    
 
 # MAIN FUNCTION
 def main():
-    global enable_LT, enable_PS, enable_cl, pass_finished, car_detected
+    global enable_LT, enable_PS, pass_finished, car_detected
 
     # INIT NODE
     print('Object Avoidance Node...')
@@ -57,7 +56,6 @@ def main():
     # PUBLISHERS
     pub_enable_LT = rospy.Publisher('/enable_LT', Bool, queue_size=10)
     pub_enable_PS = rospy.Publisher('/enable_PS', Bool, queue_size=10)
-    pub_enable_CL = rospy.Publisher('/enable_cl', Bool, queue_size=10)
 
     # STATE MACHINE
     state = SM_CRUISE
@@ -68,7 +66,6 @@ def main():
             # print('CRUISE')
             enable_LT.data = True
             enable_PS.data = False
-            enable_cl.data = True
 
             if car_detected:
                 state = SM_PASS
@@ -77,7 +74,6 @@ def main():
             # print('PASS')
             enable_PS.data = True
             enable_LT.data = False
-            enable_cl.data = False
             if pass_finished:
                 pass_finished = False               # FROM PASS NODE
                 car_detected = False
@@ -87,7 +83,6 @@ def main():
         # PUBLISH ENABLES
         pub_enable_LT.publish(enable_LT)        # ENABLE LANE TRACKING
         pub_enable_PS.publish(enable_PS)        # ENABLE PASS
-        pub_enable_CL.publish(enable_cl)
 
         rate.sleep()
 

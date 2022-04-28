@@ -19,6 +19,6 @@
   <node name="lane_tracking"    pkg="bring_up" type="lane_tracking.py"    output="screen" respawn="true"/>
   <node name="lane_detect"      pkg="bring_up" type="lane_detect.py"      output="screen" respawn="true"/>
 
-  <node name="rviz" pkg="rviz" type="rviz" respawn="false" output="screen" args="-d $(find bring_up)/rviz/car_sensors.rviz"/>
+  <!-- <node name="rviz" pkg="rviz" type="rviz" respawn="false" output="screen" args="-d $(find bring_up)/rviz/car_sensors.rviz"/> -->
 
 </launch>

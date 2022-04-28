@@ -19,8 +19,6 @@ std::vector<std::vector<double>> initial_centroids = {
     // { -6.015,  0.0,  0.903 }
 };
 
-bool enable = false;
-
 //MESSAGE 
 ros::Publisher pub_poses;
 
@@ -200,28 +198,21 @@ void objectDetectCallback(const sensor_msgs::PointCloud2::ConstPtr& msg){
 
     // CLUSTERING
 
-    if(enable == true){
-        geometry_msgs::PoseArray centroids;                                          // ACTUAL CENTROIDS
-        std::vector<std::vector<double>> new_centroids;
-        new_centroids = kmeans(point_cloud);                                         // APPLY KMEANS
+    geometry_msgs::PoseArray centroids;                                          // ACTUAL CENTROIDS
+    std::vector<std::vector<double>> new_centroids;
+    new_centroids = kmeans(point_cloud);                                         // APPLY KMEANS
 
-        // ARRAY TO POSE ARRAY
-        centroids.poses.resize(new_centroids.size());
-        for(int i = 0; i < new_centroids.size(); i++){
-            centroids.poses[i].position.x = new_centroids[i][0];
-            centroids.poses[i].position.y = new_centroids[i][1];
-            centroids.poses[i].position.z = new_centroids[i][2];
-        }
-        centroids.header.frame_id = "lidar_link";
-        pub_poses.publish(centroids);                                                // PUBLISH CENTROIDS
+    // ARRAY TO POSE ARRAY
+    centroids.poses.resize(new_centroids.size());
+    for(int i = 0; i < new_centroids.size(); i++){
+        centroids.poses[i].position.x = new_centroids[i][0];
+        centroids.poses[i].position.y = new_centroids[i][1];
+        centroids.poses[i].position.z = new_centroids[i][2];
     }
+    centroids.header.frame_id = "lidar_link";
+    pub_poses.publish(centroids);                                                // PUBLISH CENTROIDS
 
     
-}
-
-
-void enableCallback(const std_msgs::Bool::ConstPtr& msg){
-    enable = msg->data;
 }
 
 /*   
@@ -237,7 +228,6 @@ int main(int argc, char **argv)
     pub_poses = n.advertise<geometry_msgs::PoseArray>("/object_pose", 10);
 
     ros::Subscriber sub = n.subscribe("/point_cloud", 10, objectDetectCallback);
-    ros::Subscriber enable = n.subscribe("/enable_cl", 10, enableCallback);
     ros::spin();
 
     return 0;

@@ -41,39 +41,45 @@ def main():
 
     while not rospy.is_shutdown():
         # PASSING ACTION
-        steering_angle = 0.0
+        
         if enable_PS:
-
-            steering_angle = current_steering -( 0.0174533 * 8 )            # TURN LEFT
-            print('GIRANDO A LA IZQUIERDA')
+            steering_angle = 0.0
             pub_angle.publish(steering_angle)
-            time.sleep(2)
 
-            steering_angle = current_steering + ( 0.0174533 * 8 )             # TURN RIGHT
-            print('GIRANDO A LA DERECHA')
-            pub_angle.publish(steering_angle)
-            time.sleep(2)
 
-            steering_angle = 0.0                           # STAY STRAIGHT
-            print('ALINEANDO')
+            steering_angle = current_steering -( 0.0174533 * 16 )           # TURN LEFT
+            print('GIRANDO A LA IZQUIERDA', steering_angle)
             pub_angle.publish(steering_angle)
-            time.sleep(2)
+            # rospy.sleep(1)
+            time.sleep(1)
 
-            steering_angle = current_steering + ( 0.0174533 * 16 )            # TURN RIGHT
-            print('GIRANDO A LA DERECHA')
+            steering_angle = current_steering + ( 0.0174533 * 16 )          # TURN RIGHT
+            print('GIRANDO A LA DERECHA', steering_angle)
             pub_angle.publish(steering_angle)
-            time.sleep(2)
+            # rospy.sleep(1)
+            time.sleep(1)
 
-            steering_angle = current_steering - ( 0.0174533 * 16 )           # TURN LEFT
-            print('GIRANDO A LA IZQUIERDA')
+            steering_angle = 0.0                                            # STAY STRAIGHT
+            print('ALINEANDO', steering_angle)
             pub_angle.publish(steering_angle)
-            time.sleep(2)
+            # rospy.sleep(1)
+            time.sleep(1)
+
+            steering_angle = current_steering + ( 0.0174533 * 32 )         # TURN RIGHT
+            print('GIRANDO A LA DERECHA', steering_angle)
+            pub_angle.publish(steering_angle)
+            # rospy.sleep(1)
+            time.sleep(1)
+
+            steering_angle = current_steering - ( 0.0174533 * 32 )         # TURN LEFT
+            print('GIRANDO A LA IZQUIERDA', steering_angle)
+            pub_angle.publish(steering_angle)
+            # rospy.sleep(1)
+            time.sleep(1)
+
 
             pass_finished.data = True                      # PASS FINISHED
-
             pub_pass_finished.publish(pass_finished)       # PUBLISH PASS FINISHED
-        else:
-            steering_angle = 0.0
             
         rate.sleep()
 
