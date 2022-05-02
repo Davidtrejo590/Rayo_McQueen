@@ -31,12 +31,12 @@ class Control:
             # print('AVG BORDER: ', self.steering_angle)
         # LEFT LINES DETECTED
         elif (left_border[0] != 0.0 and left_border[1] != 0.0) and (right_border[0] == 0 or right_border[1] == 0.0):
-            self.cruise_speed = goal_speed / 2.0
+            self.cruise_speed = goal_speed
             self.steering_angle = self.compute_steering_angle(left_border, right_border, True)
             # print('ONLY LEFT BORDER: ', self.steering_angle)
         # RIGHT LINES DETECTED
         elif (left_border[0] == 0.0 or left_border[1] == 0.0) and (right_border[0] != 0 and right_border[1] != 0.0):
-            self.cruise_speed = goal_speed / 2.0
+            self.cruise_speed = goal_speed
             self.steering_angle = self.compute_steering_angle(left_border, right_border, False)
             # print('ONLY RIGHT BORDER: ', self.steering_angle)
 

@@ -27,18 +27,16 @@ def callback_car_pose(msg):
 
     global car_detected
 
-    if msg:
-     for car in msg.poses:
-         if car.position.x != 0.0 or car.position.y != 0.0:
-            if car.position.z > -15.0:
-                # print('CAR DETECTED', [car.position.x, car.position.z])
-                car_detected = True
+    if msg.poses[0].position.z != 0.0 and msg.poses[0].position.z > -15.0 :
+        car_detected = True
+    else:
+        car_detected = False
+    
 
 # PASS FINISHED CALLBACK
 def callback_pass_finished(msg):
     global pass_finished
     pass_finished = msg.data
-    
 
 # MAIN FUNCTION
 def main():
