@@ -408,11 +408,13 @@ clean: gtest/googlemock/gtest/CMakeFiles/gtest.dir/clean
 # Directory level rules for directory bring_up
 
 # Convenience name for "all" pass in the directory.
+bring_up/all: bring_up/CMakeFiles/object_parking.dir/all
 bring_up/all: bring_up/CMakeFiles/object_detect.dir/all
 
 .PHONY : bring_up/all
 
 # Convenience name for "clean" pass in the directory.
+bring_up/clean: bring_up/CMakeFiles/object_parking.dir/clean
 bring_up/clean: bring_up/CMakeFiles/roscpp_generate_messages_py.dir/clean
 bring_up/clean: bring_up/CMakeFiles/roscpp_generate_messages_eus.dir/clean
 bring_up/clean: bring_up/CMakeFiles/roscpp_generate_messages_lisp.dir/clean
@@ -436,6 +438,57 @@ bring_up/clean: bring_up/CMakeFiles/std_msgs_generate_messages_py.dir/clean
 bring_up/preinstall:
 
 .PHONY : bring_up/preinstall
+
+#=============================================================================
+# Target rules for target bring_up/CMakeFiles/object_parking.dir
+
+# All Build rule for target.
+bring_up/CMakeFiles/object_parking.dir/all: bring_up/CMakeFiles/roscpp_generate_messages_py.dir/all
+bring_up/CMakeFiles/object_parking.dir/all: bring_up/CMakeFiles/roscpp_generate_messages_eus.dir/all
+bring_up/CMakeFiles/object_parking.dir/all: bring_up/CMakeFiles/roscpp_generate_messages_lisp.dir/all
+bring_up/CMakeFiles/object_parking.dir/all: bring_up/CMakeFiles/rosgraph_msgs_generate_messages_cpp.dir/all
+bring_up/CMakeFiles/object_parking.dir/all: bring_up/CMakeFiles/std_msgs_generate_messages_lisp.dir/all
+bring_up/CMakeFiles/object_parking.dir/all: bring_up/CMakeFiles/roscpp_generate_messages_cpp.dir/all
+bring_up/CMakeFiles/object_parking.dir/all: bring_up/CMakeFiles/rosgraph_msgs_generate_messages_eus.dir/all
+bring_up/CMakeFiles/object_parking.dir/all: bring_up/CMakeFiles/rosgraph_msgs_generate_messages_lisp.dir/all
+bring_up/CMakeFiles/object_parking.dir/all: bring_up/CMakeFiles/std_msgs_generate_messages_cpp.dir/all
+bring_up/CMakeFiles/object_parking.dir/all: bring_up/CMakeFiles/rosgraph_msgs_generate_messages_nodejs.dir/all
+bring_up/CMakeFiles/object_parking.dir/all: bring_up/CMakeFiles/rosgraph_msgs_generate_messages_py.dir/all
+bring_up/CMakeFiles/object_parking.dir/all: bring_up/CMakeFiles/std_msgs_generate_messages_eus.dir/all
+bring_up/CMakeFiles/object_parking.dir/all: bring_up/CMakeFiles/std_msgs_generate_messages_nodejs.dir/all
+bring_up/CMakeFiles/object_parking.dir/all: bring_up/CMakeFiles/roscpp_generate_messages_nodejs.dir/all
+bring_up/CMakeFiles/object_parking.dir/all: bring_up/CMakeFiles/std_msgs_generate_messages_py.dir/all
+	$(MAKE) -f bring_up/CMakeFiles/object_parking.dir/build.make bring_up/CMakeFiles/object_parking.dir/depend
+	$(MAKE) -f bring_up/CMakeFiles/object_parking.dir/build.make bring_up/CMakeFiles/object_parking.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/davidtrejo/Rayo_McQueen/catkin_ws/build/CMakeFiles --progress-num=14,15 "Built target object_parking"
+.PHONY : bring_up/CMakeFiles/object_parking.dir/all
+
+# Include target in all.
+all: bring_up/CMakeFiles/object_parking.dir/all
+
+.PHONY : all
+
+# Build rule for subdir invocation for target.
+bring_up/CMakeFiles/object_parking.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/davidtrejo/Rayo_McQueen/catkin_ws/build/CMakeFiles 2
+	$(MAKE) -f CMakeFiles/Makefile2 bring_up/CMakeFiles/object_parking.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/davidtrejo/Rayo_McQueen/catkin_ws/build/CMakeFiles 0
+.PHONY : bring_up/CMakeFiles/object_parking.dir/rule
+
+# Convenience name for target.
+object_parking: bring_up/CMakeFiles/object_parking.dir/rule
+
+.PHONY : object_parking
+
+# clean rule for target.
+bring_up/CMakeFiles/object_parking.dir/clean:
+	$(MAKE) -f bring_up/CMakeFiles/object_parking.dir/build.make bring_up/CMakeFiles/object_parking.dir/clean
+.PHONY : bring_up/CMakeFiles/object_parking.dir/clean
+
+# clean rule for target.
+clean: bring_up/CMakeFiles/object_parking.dir/clean
+
+.PHONY : clean
 
 #=============================================================================
 # Target rules for target bring_up/CMakeFiles/roscpp_generate_messages_py.dir

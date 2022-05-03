@@ -168,6 +168,21 @@ depend:
 .PHONY : depend
 
 # Convenience name for target.
+bring_up/CMakeFiles/object_parking.dir/rule:
+	cd /home/davidtrejo/Rayo_McQueen/catkin_ws/build && $(MAKE) -f CMakeFiles/Makefile2 bring_up/CMakeFiles/object_parking.dir/rule
+.PHONY : bring_up/CMakeFiles/object_parking.dir/rule
+
+# Convenience name for target.
+object_parking: bring_up/CMakeFiles/object_parking.dir/rule
+
+.PHONY : object_parking
+
+# fast build rule for target.
+object_parking/fast:
+	cd /home/davidtrejo/Rayo_McQueen/catkin_ws/build && $(MAKE) -f bring_up/CMakeFiles/object_parking.dir/build.make bring_up/CMakeFiles/object_parking.dir/build
+.PHONY : object_parking/fast
+
+# Convenience name for target.
 bring_up/CMakeFiles/roscpp_generate_messages_py.dir/rule:
 	cd /home/davidtrejo/Rayo_McQueen/catkin_ws/build && $(MAKE) -f CMakeFiles/Makefile2 bring_up/CMakeFiles/roscpp_generate_messages_py.dir/rule
 .PHONY : bring_up/CMakeFiles/roscpp_generate_messages_py.dir/rule
@@ -434,6 +449,33 @@ src/object_detect.cpp.s:
 	cd /home/davidtrejo/Rayo_McQueen/catkin_ws/build && $(MAKE) -f bring_up/CMakeFiles/object_detect.dir/build.make bring_up/CMakeFiles/object_detect.dir/src/object_detect.cpp.s
 .PHONY : src/object_detect.cpp.s
 
+src/object_parking.o: src/object_parking.cpp.o
+
+.PHONY : src/object_parking.o
+
+# target to build an object file
+src/object_parking.cpp.o:
+	cd /home/davidtrejo/Rayo_McQueen/catkin_ws/build && $(MAKE) -f bring_up/CMakeFiles/object_parking.dir/build.make bring_up/CMakeFiles/object_parking.dir/src/object_parking.cpp.o
+.PHONY : src/object_parking.cpp.o
+
+src/object_parking.i: src/object_parking.cpp.i
+
+.PHONY : src/object_parking.i
+
+# target to preprocess a source file
+src/object_parking.cpp.i:
+	cd /home/davidtrejo/Rayo_McQueen/catkin_ws/build && $(MAKE) -f bring_up/CMakeFiles/object_parking.dir/build.make bring_up/CMakeFiles/object_parking.dir/src/object_parking.cpp.i
+.PHONY : src/object_parking.cpp.i
+
+src/object_parking.s: src/object_parking.cpp.s
+
+.PHONY : src/object_parking.s
+
+# target to generate assembly for a file
+src/object_parking.cpp.s:
+	cd /home/davidtrejo/Rayo_McQueen/catkin_ws/build && $(MAKE) -f bring_up/CMakeFiles/object_parking.dir/build.make bring_up/CMakeFiles/object_parking.dir/src/object_parking.cpp.s
+.PHONY : src/object_parking.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -443,6 +485,7 @@ help:
 	@echo "... install/strip"
 	@echo "... install/local"
 	@echo "... rebuild_cache"
+	@echo "... object_parking"
 	@echo "... list_install_components"
 	@echo "... roscpp_generate_messages_py"
 	@echo "... roscpp_generate_messages_eus"
@@ -466,6 +509,9 @@ help:
 	@echo "... src/object_detect.o"
 	@echo "... src/object_detect.i"
 	@echo "... src/object_detect.s"
+	@echo "... src/object_parking.o"
+	@echo "... src/object_parking.i"
+	@echo "... src/object_parking.s"
 .PHONY : help
 
 

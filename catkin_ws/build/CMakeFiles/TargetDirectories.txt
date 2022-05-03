@@ -38,6 +38,7 @@
 /home/davidtrejo/Rayo_McQueen/catkin_ws/build/bring_up/CMakeFiles/install/strip.dir
 /home/davidtrejo/Rayo_McQueen/catkin_ws/build/bring_up/CMakeFiles/install/local.dir
 /home/davidtrejo/Rayo_McQueen/catkin_ws/build/bring_up/CMakeFiles/rebuild_cache.dir
+/home/davidtrejo/Rayo_McQueen/catkin_ws/build/bring_up/CMakeFiles/object_parking.dir
 /home/davidtrejo/Rayo_McQueen/catkin_ws/build/bring_up/CMakeFiles/list_install_components.dir
 /home/davidtrejo/Rayo_McQueen/catkin_ws/build/bring_up/CMakeFiles/roscpp_generate_messages_py.dir
 /home/davidtrejo/Rayo_McQueen/catkin_ws/build/bring_up/CMakeFiles/roscpp_generate_messages_eus.dir
