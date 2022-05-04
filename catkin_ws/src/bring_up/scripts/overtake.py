@@ -9,25 +9,31 @@ from std_msgs.msg import Bool, Float64
 import time
 
 # STATES
-SM_INIT = "SM_INIT"
-SM_TURNING_RIGHT = "SM_TURNING_RIGHT"
-SM_TURNING_LEFT = "SM_TURNING_LEFT"
-SM_STRAIGHT = "SM_STRAIGHT"
-SM_STRAIGHT_2 = "SM_STRAIGHT_2"
-SM_TURNING_LEFT_2 = "SM_TURNING_LEFT_2"
-SM_TURNING_RIGHT_2 = "SM_TURNING_RIGHT_2"
-SM_FINISH = "SM_FINISH"
-SM_NONE = "SM_NONE"
+SM_START        = 'SM_START'
+SM_TURN_LEFT    = 'SM_TURN_LEFT'
+SM_TURN_RIGHT   = 'SM_TURN_RIGHT'
+SM_GO_STRAIGHT  = 'SM_GO_STRAIGHT'
+SM_TURN_RIGHT_2 = 'SM_TURN_RIGHT_2'
+SM_TURN_LEFT_2  = 'SM_TURN_LEFT_2'
+
+SM_WAIT_NEW_OVERTAKE    = 'SM_WAIT_NEW_OVERTAKE'
+SM_WAIT_TURN_LEFT       = 'SM_WAIT_TURN_LEFT'
+SM_WAIT_TURN_RIGHT      = 'SM_WAIT_TURN_RIGHT'
+SM_WAIT_GO_STRAIGHT     = 'SM_WAIT_STRAIGHT'
+SM_WAIT_TURN_RIGHT_2    = 'SM_WAIT_TURN_RIGHT_2'
+SM_WAIT_TURN_LEFT_2     = 'SM_WAIT_TURN_LEFT_2'
+SM_FINISH_OVERTAKE      = 'SM_FINISH_OVERTAKE'
 
 # GLOBAL VARIABLES
-pass_finished = Bool()
-enable_PS = False
-current_steering = 0.0
+start_overtake = None
+current_steering = None
+TIME = 10
+
 
 # CALLBACK ENABLE PASS
-def callback_enable_PS(msg):
-    global enable_PS
-    enable_PS = msg.data
+def callback_start_overtake(msg):
+    global start_overtake
+    start_overtake = msg.data
 
 def callback_current_steering(msg):
     global current_steering
@@ -36,112 +42,96 @@ def callback_current_steering(msg):
 # MAIN FUNCTION
 def main():
     
-    global enable_PS, pass_finished, current_steering
+    global start_overtake, current_steering
     
-    print('Pass Node...')
-    rospy.init_node('pass_node')
+    print('Overtake Node...')
+    rospy.init_node('overtake_node')
     rate = rospy.Rate(10)
 
     # SUBSCRIBERS
-    rospy.Subscriber('/enable_PS', Bool, callback_enable_PS)
+    rospy.Subscriber('/start_overtake', Bool, callback_start_overtake)
     rospy.Subscriber('/steering', Float64, callback_current_steering)
 
     # PUBLISHERS
-    pub_angle = rospy.Publisher('/steering', Float64, queue_size=10)
-    pub_pass_finished = rospy.Publisher('/pass_finished', Bool, queue_size=10)
+    pub_steering = rospy.Publisher('/steering', Float64, queue_size=10)
+    pub_overtake_finished = rospy.Publisher('/overtake_finished', Bool, queue_size=10)
 
-    state = SM_INIT
+    state = SM_START
     i = 0
+    count = 0
 
     while not rospy.is_shutdown():
 
-        if enable_PS:
-            i += 1
-            steering_angle = 0.0
-            pub_angle.publish(steering_angle)
-
-            if not i & 1 == 0:
-
-                print('INICIA ACCIÓN DE REBASE: ', i)
-
-                steering_angle = 0.0
-                pub_angle.publish(steering_angle)
-
-                steering_angle = current_steering -( 0.0174533 * 17 )           # TURN LEFT
-                print('GIRANDO A LA IZQUIERDA', steering_angle)
-                pub_angle.publish(steering_angle)
-                rospy.sleep(1)
-
-                # steering_angle = current_steering + ( 0.0174533 * 17 )          # TURN RIGHT
-                steering_angle = 0.0
-                print('GIRANDO A LA DERECHA', steering_angle)
-                pub_angle.publish(steering_angle)
-                rospy.sleep(0.5)
-            
-                steering_angle = current_steering + ( 0.0174533 * 32 )         # TURN RIGHT
-                print('GIRANDO A LA DERECHA', steering_angle)
-                pub_angle.publish(steering_angle)
-                rospy.sleep(1)
-
-                # steering_angle = current_steering - ( 0.0174533 * 34 )         # TURN LEFT
-                steering_angle = 0.0
-                print('GIRANDO A LA IZQUIERDA', steering_angle)
-                pub_angle.publish(steering_angle)
-                rospy.sleep(0.5)
-
-
-                pass_finished.data = True                      # PASS FINISHED
-                pub_pass_finished.publish(pass_finished)       # PUBLISH PASS FINISHED
-
-            
-
-
-        # if state == SM_INIT:
-        #     if enable_PS:
-        #         state = SM_TURNING_LEFT
-        #     else:
-        #         state = SM_INIT
-
-        # elif state == SM_TURNING_LEFT:
-        #     print('GIRANDO A LA IZQUIERDA')
-        #     pub_angle.publish(-0.0174533 * 17)
-        #     time.sleep(1)
-        #     state = SM_TURNING_RIGHT
-                    
-
-        # elif state == SM_TURNING_RIGHT:
-        #     print('GIRANDO A LA DERECHA')
-        #     pub_angle.publish(0.0174533 * 17 )
-        #     time.sleep(1)
-        #     state = SM_STRAIGHT
-                
+        if state == SM_START:                                   # STATE START
+            print('STATE MACHINE TO OVERTAKE')
+            state = SM_WAIT_NEW_OVERTAKE
         
-        # elif state == SM_STRAIGHT:
-        #     print('ALINEANDO')
-        #     pub_angle.publish(0.0)
-        #     time.sleep(1)
-        #     state = SM_TURNING_RIGHT_2
-                
+        elif state == SM_WAIT_NEW_OVERTAKE:                     # STATE WAIT NEW OVERTAKE
+            if start_overtake:
+                i += 1
+                print('ACCION DE REBASE:', i)
+                # start_overtake = False
+                pub_steering.publish(0.0)
+                state = SM_TURN_LEFT
+            else:
+                state = SM_WAIT_NEW_OVERTAKE
         
-        # elif state == SM_TURNING_RIGHT_2:
-        #     print('GIRANDO A LA DERECHA 2')
-        #     pub_angle.publish(0.0174533 * 34)
-        #     time.sleep(1)
-        #     state = SM_TURNING_LEFT_2
+        elif state == SM_TURN_LEFT:                             # STATE TURN LEFT
+            print('GIRANDO A LA IZQUIERDA')
+            pub_steering.publish(-0.35)
+            count = 0
+            state = SM_WAIT_TURN_LEFT
 
-        # elif state == SM_TURNING_LEFT_2:
-        #     print('GIRANDO A LA IZQUIERDA 2')
-        #     pub_angle.publish(-0.0174533 * 34)
-        #     time.sleep(1)
-        #     state = SM_STRAIGHT_2
+        elif state == SM_WAIT_TURN_LEFT:                        # STATE WAIT TURN LEFT
+            count += 1
+            if count > 6:
+                state = SM_TURN_RIGHT
+            else:
+                state = SM_WAIT_TURN_LEFT
 
-        # elif state == SM_STRAIGHT_2:
-        #     print('ALINEANDO FINAL')
-        #     pub_angle.publish(  0.0)
-        #     time.sleep(1)
-        #     pass_finished.data = True
-        #     pub_pass_finished.publish(pass_finished)
-        #     state = SM_INIT
+        elif state == SM_TURN_RIGHT:                            # STATE TURN RIGHT
+            print('ALINEANDO')
+            pub_steering.publish(0.35)
+            count = 0
+            state = SM_WAIT_TURN_RIGHT
+
+        elif state == SM_WAIT_TURN_RIGHT:                       # STATE WAIT TURN RIGHT
+            count += 1
+            if count > 3:
+                state = SM_TURN_RIGHT_2
+            else:
+                state = SM_WAIT_TURN_RIGHT
+
+        elif state == SM_TURN_RIGHT_2:                          # STATE TURN RIGHT 2
+            print('GIRANDO A LA DERECHA')
+            pub_steering.publish(0.5)
+            count = 0
+            state = SM_WAIT_TURN_RIGHT_2
+        
+        elif state == SM_WAIT_TURN_RIGHT_2:                     # STATE WAIT TURN RIGHT 2
+            count += 1
+            if count > 6:
+                state = SM_TURN_LEFT_2
+            else:
+                state = SM_WAIT_TURN_RIGHT_2
+        
+        elif state == SM_TURN_LEFT_2:                           # STATE TURN LEFT 2
+            print('ALINEADO FINAL')
+            pub_steering.publish(-0.5)
+            count = 0
+            state = SM_WAIT_TURN_LEFT_2
+
+        elif state == SM_WAIT_TURN_LEFT_2:                      # STATE WAIT TURN LEFT 2
+            count += 1
+            if count > 3:
+                state = SM_FINISH_OVERTAKE
+            else:
+                state = SM_WAIT_TURN_LEFT_2
+
+        elif state == SM_FINISH_OVERTAKE:                       # STATE FINISH OVERTAKE
+            pub_overtake_finished.publish(True)
+            state = SM_WAIT_NEW_OVERTAKE
+
         
         rate.sleep()
 
@@ -152,9 +142,3 @@ if __name__ == '__main__':
     except:
         rospy.ROSInterruptException
 
-
-
-
-
-
-            

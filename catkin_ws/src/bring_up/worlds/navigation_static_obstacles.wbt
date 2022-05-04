@@ -72,8 +72,8 @@ WorldInfo {
   ]
 }
 Viewpoint {
-  orientation 0.5933034886113333 -0.5480633238510567 -0.5895910137128562 4.140400210780746
-  position -1.9465547981606548 324.66878433081285 20.764361391811732
+  orientation 0.5312200406266017 -0.6634169108539758 -0.5269566119042817 4.310240010432988
+  position -6.822880439119256 73.21605332736422 -21.378402748255443
   near 1
   follow "vehicle"
   followSmoothness 0
@@ -127,7 +127,7 @@ HighwayPole {
   rotation 0 1 0 1.5708
 }
 DEF OBS-5 TeslaModel3Simple {
-  translation 19.43 0.4 -2.85431
+  translation 19.43 0.4 5.15589e-05
   rotation 0 1 0 3.14159
   name "vehicle(4)"
 }
@@ -403,21 +403,8 @@ CurvedRoadSegment {
   curvatureRadius 30.5
 }
 BmwX5 {
-  hidden position_0_0 -0.0015051200683564997
-  hidden position2_0_0 462.45532870572924
-  hidden position_0_1 0.001025311489026781
-  hidden position2_0_1 471.29387417154504
-  hidden position_0_2 466.9561272360255
-  hidden position_0_3 470.67569678928845
-  hidden position_0_9 0.1898718159128466
-  hidden rotation_1 -0.00024989521820621913 -0.9999996856029092 0.0007525599396454921 2.5003842136213215
-  hidden rotation_2 0.018642181611893644 0.9998260880474147 -0.0005125666324554146 6.228199616251349
-  hidden rotation_3 0 1 0 2.0004145047361095
-  hidden rotation_4 0 -1 0 5.719984057999052
-  hidden translation_26 0.3833923697757561 -0.04575957459643587 -0.0407676210040977
-  hidden rotation_26 0 -0.6652060421485012 0.7466598432279096 0.1898718159128465
-  translation -36.5583 0.600976 -29.2883
-  rotation -0.022633909368649962 0.9941234114885373 0.10586004381769315 -0.02682530717958631
+  translation -36.9632 0.0282515 -32.6809
+  rotation -0.9785174180294364 0.2061634999938847 0.0005233385869732009 0.005188375975700859
   controller "bmw_x5_controller"
   sensorsSlotTop [
     Lidar {
@@ -482,20 +469,20 @@ BmwX5 {
   ]
 }
 DEF OBS-1 CitroenCZeroSimple {
-  translation -36.89 0.4 9.549125881468331
+  translation -36.89 0.4 3.18
   name "vehicle(1)"
 }
 DEF OBS-2 LincolnMKZSimple {
-  translation 8.779704439135207 0.4 75.57
+  translation 9.3403 0.4 75.57
   rotation 0 1 0 1.5708
   name "vehicle(2)"
 }
 DEF OBS-3 MercedesBenzSprinterSimple {
-  translation 0.19753493974349645 0.4 10.6
+  translation 10.31 0.4 10.6
   rotation 0 1 0 -1.5707953071795862
 }
 Robot {
   name "supervisor"
-  controller ""
+  controller "supervisor_static_obstacles"
   supervisor TRUE
 }

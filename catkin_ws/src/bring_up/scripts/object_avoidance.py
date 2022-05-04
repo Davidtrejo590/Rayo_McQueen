@@ -11,36 +11,35 @@ from geometry_msgs.msg import PoseArray
 from std_msgs.msg import Bool, Float64
 
 # STATES
-SM_CRUISE   = 'CRUISE'
-SM_PASS     = 'PASS'
-
-# ENABLES
-enable_LT = Bool()              # ENABLE LANE TRACKING
-enable_PS = Bool()              # ENABLE PASSING
+SM_LANE_TRACKING    = 'SM_LANE_TRACKING'
+SM_START_OVERTAKE   = 'SM_START_OVERTAKE'
+SM_WAIT_OVERTAKE    = 'SM_WAIT_OVERTAKE'
+SM_INIT             = 'SM_INIT'
+SM_FINISH           = 'SM_FINISH'
 
 # GLOBAL VARIABLES
-pass_finished = False
-car_detected = False
+overtake_finished = None
+car_detected = None
 
 # CAR POSE CALLBACK
 def callback_car_pose(msg):
-
     global car_detected
 
-    if msg.poses[0].position.z != 0.0 and msg.poses[0].position.z > -15.0 :
+    if msg.poses[0].position.z != 0.0 and msg.poses[0].position.z > -15.0:
         car_detected = True
     else:
         car_detected = False
     
 
-# PASS FINISHED CALLBACK
-def callback_pass_finished(msg):
-    global pass_finished
-    pass_finished = msg.data
+# OVERTAKE FINISHED CALLBACK
+def callback_overtake_finished(msg):
+    global overtake_finished
+    overtake_finished = msg.data
+
 
 # MAIN FUNCTION
 def main():
-    global enable_LT, enable_PS, pass_finished, car_detected
+    global overtake_finished, car_detected
 
     # INIT NODE
     print('Object Avoidance Node...')
@@ -49,38 +48,43 @@ def main():
 
     # SUBSCRIBERS
     rospy.Subscriber('/object_pose', PoseArray, callback_car_pose)
-    rospy.Subscriber('/pass_finished', Bool, callback_pass_finished)
+    rospy.Subscriber('/overtake_finished', Bool, callback_overtake_finished)
 
     # PUBLISHERS
     pub_enable_LT = rospy.Publisher('/enable_LT', Bool, queue_size=10)
-    pub_enable_PS = rospy.Publisher('/enable_PS', Bool, queue_size=10)
+    pub_start_overtake = rospy.Publisher('/start_overtake', Bool, queue_size=10)
 
     # STATE MACHINE
-    state = SM_CRUISE
+    state = SM_INIT
 
     while not rospy.is_shutdown():
-        
-        if state == SM_CRUISE:                      # CRUISE STATE
-            # print('CRUISE')
-            enable_LT.data = True
-            enable_PS.data = False
 
+        if state == SM_INIT:                                # STATE INIT 
+            print('INIT STATE MACHINE AVOIDANCE')
+            state = SM_LANE_TRACKING
+
+        elif state == SM_LANE_TRACKING:                     # STATE LANE TRACKING
             if car_detected:
-                state = SM_PASS
+                state = SM_START_OVERTAKE
+            else:
+                pub_enable_LT.publish(True)                 # ENABLE LANE TRACKING
+                state = SM_LANE_TRACKING
         
-        elif state == SM_PASS:                      # PASS STATE
-            # print('PASS')
-            enable_PS.data = True
-            enable_LT.data = False
-            if pass_finished:
-                pass_finished = False               # FROM PASS NODE
-                car_detected = False
-                state = SM_CRUISE
-        
+        elif state == SM_START_OVERTAKE:                    # STATE START OVERTAKE
+            pub_start_overtake.publish(True)                # START OVERTAKE
+            pub_enable_LT.publish(False)                    # DISABLE LANE TRACKING
+            state = SM_WAIT_OVERTAKE
 
-        # PUBLISH ENABLES
-        pub_enable_LT.publish(enable_LT)        # ENABLE LANE TRACKING
-        pub_enable_PS.publish(enable_PS)        # ENABLE PASS
+        elif state == SM_WAIT_OVERTAKE:                     # STATE WAIT OVERTAKE
+            pub_start_overtake.publish(False)               # START OVERTAKE
+            if overtake_finished:
+                state = SM_FINISH
+            else:
+                state = SM_WAIT_OVERTAKE
+        
+        elif state == SM_FINISH:                            # STATE OVERTAKE FINISHED
+            overtake_finished = False
+            state = SM_LANE_TRACKING
 
         rate.sleep()
 
