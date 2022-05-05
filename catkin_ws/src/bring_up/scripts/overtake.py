@@ -13,15 +13,15 @@ SM_START        = 'SM_START'
 SM_TURN_LEFT    = 'SM_TURN_LEFT'
 SM_TURN_RIGHT   = 'SM_TURN_RIGHT'
 SM_GO_STRAIGHT  = 'SM_GO_STRAIGHT'
-SM_TURN_RIGHT_2 = 'SM_TURN_RIGHT_2'
-SM_TURN_LEFT_2  = 'SM_TURN_LEFT_2'
+SM_ALIGN_RIGHT  = 'SM_ALIGN_RIGHT'
+SM_ALIGN_LEFT   = 'SM_ALIGN_LEFT'
 
 SM_WAIT_NEW_OVERTAKE    = 'SM_WAIT_NEW_OVERTAKE'
 SM_WAIT_TURN_LEFT       = 'SM_WAIT_TURN_LEFT'
 SM_WAIT_TURN_RIGHT      = 'SM_WAIT_TURN_RIGHT'
 SM_WAIT_GO_STRAIGHT     = 'SM_WAIT_STRAIGHT'
-SM_WAIT_TURN_RIGHT_2    = 'SM_WAIT_TURN_RIGHT_2'
-SM_WAIT_TURN_LEFT_2     = 'SM_WAIT_TURN_LEFT_2'
+SM_WAIT_ALIGN_RIGHT     = 'SM_WAIT_ALIGN_RIGHT'
+SM_WAIT_ALIGN_LEFT      = 'SM_WAIT_ALIGN_LEFT'
 SM_FINISH_OVERTAKE      = 'SM_FINISH_OVERTAKE'
 
 # GLOBAL VARIABLES
@@ -53,9 +53,10 @@ def main():
     rospy.Subscriber('/steering', Float64, callback_current_steering)
 
     # PUBLISHERS
-    pub_steering = rospy.Publisher('/steering', Float64, queue_size=10)
     pub_overtake_finished = rospy.Publisher('/overtake_finished', Bool, queue_size=10)
-
+    pub_steering = rospy.Publisher('/steering', Float64, queue_size=10)
+    pub_speed = rospy.Publisher('/speed', Float64, queue_size=10)
+    
     state = SM_START
     i = 0
     count = 0
@@ -70,63 +71,79 @@ def main():
             if start_overtake:
                 i += 1
                 print('ACCION DE REBASE:', i)
-                # start_overtake = False
                 pub_steering.publish(0.0)
+                pub_speed.publish(20.0)
                 state = SM_TURN_LEFT
             else:
                 state = SM_WAIT_NEW_OVERTAKE
         
         elif state == SM_TURN_LEFT:                             # STATE TURN LEFT
             print('GIRANDO A LA IZQUIERDA')
-            pub_steering.publish(-0.35)
+            pub_steering.publish(current_steering - 0.4)
             count = 0
             state = SM_WAIT_TURN_LEFT
 
         elif state == SM_WAIT_TURN_LEFT:                        # STATE WAIT TURN LEFT
             count += 1
-            if count > 6:
-                state = SM_TURN_RIGHT
+            if count > 10:
+                state = SM_ALIGN_RIGHT
             else:
                 state = SM_WAIT_TURN_LEFT
 
-        elif state == SM_TURN_RIGHT:                            # STATE TURN RIGHT
-            print('ALINEANDO')
-            pub_steering.publish(0.35)
+        elif state == SM_ALIGN_RIGHT:                            # STATE TURN RIGHT
+            print('ALINEANDO DERECHA')
+            pub_steering.publish(current_steering + 0.4)
+            count = 0
+            state = SM_WAIT_ALIGN_RIGHT
+
+        elif state == SM_WAIT_ALIGN_RIGHT:                       # STATE WAIT TURN RIGHT
+            count += 1
+            if count > 0:
+                state = SM_TURN_RIGHT
+            else:
+                state = SM_WAIT_ALIGN_RIGHT
+
+        elif state == SM_TURN_RIGHT:                          # STATE TURN RIGHT 2
+            print('GIRANDO A LA DERECHA')
+            pub_steering.publish(current_steering + 0.6)
             count = 0
             state = SM_WAIT_TURN_RIGHT
-
-        elif state == SM_WAIT_TURN_RIGHT:                       # STATE WAIT TURN RIGHT
+        
+        elif state == SM_WAIT_TURN_RIGHT:                     # STATE WAIT TURN RIGHT 2
             count += 1
-            if count > 3:
-                state = SM_TURN_RIGHT_2
+            if count > 10:
+                state = SM_ALIGN_LEFT
             else:
                 state = SM_WAIT_TURN_RIGHT
-
-        elif state == SM_TURN_RIGHT_2:                          # STATE TURN RIGHT 2
-            print('GIRANDO A LA DERECHA')
-            pub_steering.publish(0.5)
-            count = 0
-            state = SM_WAIT_TURN_RIGHT_2
         
-        elif state == SM_WAIT_TURN_RIGHT_2:                     # STATE WAIT TURN RIGHT 2
+        elif state == SM_ALIGN_LEFT:                           # STATE TURN LEFT 2
+            print('ALINEADO IZQUIERDA')
+            pub_steering.publish(current_steering - 0.6)
+            count = 0
+            state = SM_WAIT_ALIGN_LEFT
+
+        elif state == SM_WAIT_ALIGN_LEFT:                      # STATE WAIT TURN LEFT 2
             count += 1
-            if count > 6:
-                state = SM_TURN_LEFT_2
+            if count > 5:
+                state = SM_GO_STRAIGHT
             else:
-                state = SM_WAIT_TURN_RIGHT_2
-        
-        elif state == SM_TURN_LEFT_2:                           # STATE TURN LEFT 2
-            print('ALINEADO FINAL')
-            pub_steering.publish(-0.5)
-            count = 0
-            state = SM_WAIT_TURN_LEFT_2
+                state = SM_WAIT_ALIGN_LEFT
 
-        elif state == SM_WAIT_TURN_LEFT_2:                      # STATE WAIT TURN LEFT 2
+
+        elif state == SM_GO_STRAIGHT:
+            print('AVANZANDO')
+            pub_steering.publish(0.0)
+            pub_speed.publish(0.0)
+            count = 0
+            state = SM_WAIT_GO_STRAIGHT
+
+        
+        elif state == SM_WAIT_GO_STRAIGHT:
             count += 1
-            if count > 3:
+            if count > 0:
                 state = SM_FINISH_OVERTAKE
             else:
-                state = SM_WAIT_TURN_LEFT_2
+                state = SM_WAIT_GO_STRAIGHT
 
         elif state == SM_FINISH_OVERTAKE:                       # STATE FINISH OVERTAKE
             pub_overtake_finished.publish(True)

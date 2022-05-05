@@ -5,7 +5,7 @@ WorldInfo {
   ]
   title "TMR-2022-AutoModelCar"
   ERP 0.6
-  basicTimeStep 33
+  basicTimeStep 120
   coordinateSystem "NUE"
   gpsCoordinateSystem "WGS84"
   lineScale 1
@@ -72,8 +72,8 @@ WorldInfo {
   ]
 }
 Viewpoint {
-  orientation 0.5312200406266017 -0.6634169108539758 -0.5269566119042817 4.310240010432988
-  position -6.822880439119256 73.21605332736422 -21.378402748255443
+  orientation 0.5877742058576765 -0.5579543877695063 -0.5858398963002887 4.162259626462676
+  position -8.054604876595548 237.8293901089334 3.09748299710172
   near 1
   follow "vehicle"
   followSmoothness 0
