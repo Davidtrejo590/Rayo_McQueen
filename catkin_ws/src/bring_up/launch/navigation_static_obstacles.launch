@@ -22,7 +22,7 @@
   <node name="object_detect"    pkg="bring_up" type="object_detect"       output="screen" respawn="true"/>
   <node name="overtake"         pkg="bring_up" type="overtake.py"         output="screen" respawn="true"/>
 
-  <param name="/speed" type="double" value="30.0"/>
+  <param name="/dynamic"  type="bool"   value="false"/>
+  <param name="/speed"    type="double" value="30.0"/>
 
-<!-- <node name="rviz" pkg="rviz" type="rviz" respawn="false" output="screen" args="-d $(find bring_up)/rviz/car_sensors.rviz"/> -->
 </launch>

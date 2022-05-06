@@ -5,6 +5,7 @@
 """
 
 # LIBRARIES
+from turtle import speed
 import rospy
 from geometry_msgs.msg import PoseArray
 from std_msgs.msg import Float64
@@ -27,6 +28,7 @@ SM_INIT             = 'SM_INIT'
 position        = [0.0, 0.0]
 positions       = []
 start_parking   = None
+speed           = None
 
 
 # CAR POSE CALLBACK
@@ -44,6 +46,7 @@ def callback_car_pose(msg):
     # TWO CARS DETECTED
     if len(positions) == 2:
         start_parking = True
+        positions.clear()
     else:
         start_parking = False
 
@@ -51,12 +54,17 @@ def callback_car_pose(msg):
 
 # MAIN FUNCTION
 def main():
-    global start_parking
+    global start_parking, speed
 
     # INIT NODE
     print('Parking Node...')
     rospy.init_node('parking_node')
     rate = rospy.Rate(10)
+
+    # PARAMS
+    if rospy.has_param('/speed'):
+        speed = rospy.get_param('/speed')
+
 
     # SUBSCRIBERS
     rospy.Subscriber('/object_pose', PoseArray, callback_car_pose)
@@ -74,6 +82,7 @@ def main():
 
         # STATE MACHINE TO PARKING
         if state == SM_INIT:                        # STATE INIT
+            pub_speed.publish(speed)
             if start_parking:
                 state = SM_BREAK
             else:
@@ -98,7 +107,7 @@ def main():
 
         elif state == SM_WAIT_GO_BACK:              # STATE WAIT GO BACK
             count += 1
-            if count > 5:
+            if count > 20:
                 state = SM_TURN_RIGHT
             else:
                 state = SM_WAIT_GO_BACK
@@ -144,6 +153,7 @@ def main():
             count = 0
             pub_speed.publish(0.0)
             pub_steering.publish(0.0)
+            speed = 0.0
             start_parking = False
             state = SM_INIT
 
