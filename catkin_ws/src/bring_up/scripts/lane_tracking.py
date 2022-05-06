@@ -13,7 +13,9 @@ from control_laws import Control
 # GLOBAL VARIABLES
 left_border   = [0.0, 0.0]
 right_border  = [0.0, 0.0]
-enable_LT   = None
+enable_LT     = None
+speed         = None
+
 
 
 # LEFT LANE CALLBACK
@@ -37,7 +39,7 @@ def callback_enable_LT(msg):
 # MAIN FUNCTION
 def main():
 
-    global left_border, right_border, enable_LT
+    global left_border, right_border, enable_LT, speed
 
     # CLASS FOR CONTROL LAWS
     control_LT = Control()
@@ -46,6 +48,10 @@ def main():
     print('Lane Tracking Node...')
     rospy.init_node('lane_tracking')
     rate = rospy.Rate(10)
+
+    # PARAMS
+    if rospy.has_param('/speed'):
+        speed = rospy.get_param('/speed')
 
     # SUBSCRIBERS
     rospy.Subscriber('/left_border', Float64MultiArray, callback_left_border)
@@ -59,7 +65,7 @@ def main():
 
     while not rospy.is_shutdown():
         if enable_LT:                                               # LANE TRACKING STATE
-            control_LT.control_law(left_border, right_border)       # COMPUTE CONTROL LAWS
+            control_LT.control_law(left_border, right_border, speed)       # COMPUTE CONTROL LAWS
             pub_angle.publish(control_LT.steering_angle)            # PUBLISH STEERING ANGLE
             pub_speed.publish(control_LT.cruise_speed)
         
