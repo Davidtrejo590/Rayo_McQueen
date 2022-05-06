@@ -27,6 +27,7 @@ SM_FINISH_OVERTAKE      = 'SM_FINISH_OVERTAKE'
 # GLOBAL VARIABLES
 start_overtake = None
 current_steering = None
+dynamic = None
 TIME = 10
 
 
@@ -42,11 +43,15 @@ def callback_current_steering(msg):
 # MAIN FUNCTION
 def main():
     
-    global start_overtake, current_steering
+    global start_overtake, current_steering, dynamic
     
     print('Overtake Node...')
     rospy.init_node('overtake_node')
     rate = rospy.Rate(10)
+
+    # PARAMS 
+    if rospy.has_param('/dynamic'):
+        dynamic = rospy.get_param('/dynamic')
 
     # SUBSCRIBERS
     rospy.Subscriber('/start_overtake', Bool, callback_start_overtake)
@@ -79,7 +84,7 @@ def main():
         
         elif state == SM_TURN_LEFT:                             # STATE TURN LEFT
             print('GIRANDO A LA IZQUIERDA')
-            pub_steering.publish(current_steering - 0.4)
+            pub_steering.publish(current_steering - 0.35)
             count = 0
             state = SM_WAIT_TURN_LEFT
 
@@ -92,16 +97,29 @@ def main():
 
         elif state == SM_ALIGN_RIGHT:                            # STATE TURN RIGHT
             print('ALINEANDO DERECHA')
-            pub_steering.publish(current_steering + 0.4)
+            pub_steering.publish(current_steering + 0.35)
             count = 0
             state = SM_WAIT_ALIGN_RIGHT
 
         elif state == SM_WAIT_ALIGN_RIGHT:                       # STATE WAIT TURN RIGHT
             count += 1
-            if count > 0:
-                state = SM_TURN_RIGHT
+
+            if i == 1 and dynamic:
+                print('REBASANDO')
+                if count > 0:
+                    pub_steering.publish(0.0)
+                    pub_speed.publish(30.0)
+                    x = 0
+                    while x < 65:
+                        x += 1
+                    state = SM_TURN_RIGHT
+                else: 
+                    state = SM_WAIT_ALIGN_RIGHT
             else:
-                state = SM_WAIT_ALIGN_RIGHT
+                if count > 0:
+                    state = SM_TURN_RIGHT
+                else:
+                    state = SM_WAIT_ALIGN_RIGHT
 
         elif state == SM_TURN_RIGHT:                          # STATE TURN RIGHT 2
             print('GIRANDO A LA DERECHA')
@@ -111,7 +129,7 @@ def main():
         
         elif state == SM_WAIT_TURN_RIGHT:                     # STATE WAIT TURN RIGHT 2
             count += 1
-            if count > 10:
+            if count > 8:
                 state = SM_ALIGN_LEFT
             else:
                 state = SM_WAIT_TURN_RIGHT
