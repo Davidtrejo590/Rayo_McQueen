@@ -102,12 +102,10 @@ def main():
   # SUBSCRIBERS
   rospy.Subscriber('/speed'  , Float64, callback_cruise_speed  )
   rospy.Subscriber('/steering', Float64, callback_steering_angle)
-  
-  print("Using timestep=" + str(timestep))
 
   # MAIN LOOP
   while driver.step() != -1 and not rospy.is_shutdown():
-    print('CURRENT SPEED ', driver.getCurrentSpeed() )
+    
     msg_image.data = camera.getImage()                                     # GET IMAGE DATA FROM CAMERA
     msg_point_cloud.data = lidar.getPointCloud(data_type='buffer')         # GET POINT CLOUD FROM LIDAR
     msg_point_cloud.header.stamp = rospy.Time.now()
