@@ -6,16 +6,8 @@
 
 import rospy
 from std_msgs.msg import Bool, Float64
-import time
 
 # STATES
-SM_START        = 'SM_START'
-SM_TURN_LEFT    = 'SM_TURN_LEFT'
-SM_TURN_RIGHT   = 'SM_TURN_RIGHT'
-SM_GO_STRAIGHT  = 'SM_GO_STRAIGHT'
-SM_ALIGN_RIGHT  = 'SM_ALIGN_RIGHT'
-SM_ALIGN_LEFT   = 'SM_ALIGN_LEFT'
-
 SM_WAIT_NEW_OVERTAKE    = 'SM_WAIT_NEW_OVERTAKE'
 SM_WAIT_TURN_LEFT       = 'SM_WAIT_TURN_LEFT'
 SM_WAIT_TURN_RIGHT      = 'SM_WAIT_TURN_RIGHT'
@@ -23,12 +15,18 @@ SM_WAIT_GO_STRAIGHT     = 'SM_WAIT_STRAIGHT'
 SM_WAIT_ALIGN_RIGHT     = 'SM_WAIT_ALIGN_RIGHT'
 SM_WAIT_ALIGN_LEFT      = 'SM_WAIT_ALIGN_LEFT'
 SM_FINISH_OVERTAKE      = 'SM_FINISH_OVERTAKE'
+SM_TURN_LEFT            = 'SM_TURN_LEFT'
+SM_TURN_RIGHT           = 'SM_TURN_RIGHT'
+SM_GO_STRAIGHT          = 'SM_GO_STRAIGHT'
+SM_ALIGN_RIGHT          = 'SM_ALIGN_RIGHT'
+SM_ALIGN_LEFT           = 'SM_ALIGN_LEFT'
+SM_START                = 'SM_START'
+
 
 # GLOBAL VARIABLES
-start_overtake = None
-current_steering = None
-dynamic = None
-TIME = 10
+start_overtake      = None
+current_steering    = None
+dynamic             = None
 
 
 # CALLBACK ENABLE PASS
@@ -36,9 +34,11 @@ def callback_start_overtake(msg):
     global start_overtake
     start_overtake = msg.data
 
+# CALLBACK CURRENT STEERING
 def callback_current_steering(msg):
     global current_steering
     current_steering = msg.data
+
 
 # MAIN FUNCTION
 def main():
@@ -62,9 +62,9 @@ def main():
     pub_steering = rospy.Publisher('/steering', Float64, queue_size=10)
     pub_speed = rospy.Publisher('/speed', Float64, queue_size=10)
     
-    state = SM_START
-    i = 0
-    count = 0
+    state   = SM_START
+    count   = 0
+    i       = 0
 
     while not rospy.is_shutdown():
 
