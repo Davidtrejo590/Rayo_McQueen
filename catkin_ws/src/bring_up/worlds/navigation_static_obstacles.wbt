@@ -73,7 +73,7 @@ WorldInfo {
 }
 Viewpoint {
   orientation 0.5877742058576765 -0.5579543877695063 -0.5858398963002887 4.162259626462676
-  position -8.054604876595548 237.8293901089334 3.09748299710172
+  position -10.069440165707004 279.12682285934704 3.090841417495614
   near 1
   follow "vehicle"
   followSmoothness 0
@@ -117,24 +117,9 @@ LincolnMKZSimple {
   color 0.333333 0.341176 0.32549
   name "vehicle(7)"
 }
-ToyotaPriusSimple {
-  translation 17.1038 0.4 -39.9661
-  rotation 0 1 0 -2.6179953071795863
-  name "vehicle(5)"
-}
 HighwayPole {
   translation -41.75 0 -27.02
   rotation 0 1 0 1.5708
-}
-DEF OBS-5 TeslaModel3Simple {
-  translation 19.43 0.4 5.15589e-05
-  rotation 0 1 0 3.14159
-  name "vehicle(4)"
-}
-DEF OBS-4 RangeRoverSportSVRSimple {
-  translation -20.5549 0.4 47.1554
-  rotation 0 1 0 0.785398
-  name "vehicle(3)"
 }
 StraightRoadSegment {
   translation -35 0.02 -40

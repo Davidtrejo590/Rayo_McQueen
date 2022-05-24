@@ -8,7 +8,7 @@
 # LIBRARIES
 import rospy
 from geometry_msgs.msg import PoseArray
-from std_msgs.msg import Bool, Float64
+from std_msgs.msg import Bool
 
 # STATES
 SM_LANE_TRACKING    = 'SM_LANE_TRACKING'
@@ -63,7 +63,6 @@ def main():
     state = SM_INIT
 
     while not rospy.is_shutdown():
-        print('SAFE DISTANCE', safe_distance)
 
         if state == SM_INIT:                                # STATE INIT 
             print('INIT STATE MACHINE AVOIDANCE')
